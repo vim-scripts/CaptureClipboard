@@ -1,0 +1,39 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3246
+
+DESCRIPTION
+Quotes or text fragments can be collected from various sources outside Vim
+into a single text document through the clipboard. This plugin makes
+consecutive copy-and-pastes into Vim much more comfortable by monitoring the
+system clipboard for changes and appending them into the current Vim buffer
+automatically. Feedback about the number of captures is given in Vim's window
+title, so one does not have to switch back and forth between applications any
+more, and can completely focus on text collection via CTRL-C, CTRL-C, ...
+
+USAGE
+:[count]CaptureClipboard[!] [{delimiter}]
+:[count]CaptureClipboardReverse[!] [{delimiter}]
+			Monitors the clipboard for changes and inserts any
+			change of clipboard contents into the current buffer
+			(in new lines, or delimited by {delimiter} if given).
+			To stop, press <CTRL-C> or copy a literal dot (".") to
+			the clipboard. If [count] is given, the capture stops
+			after [count] captures. 
+
+			If [!] is given, whitespace (including new lines) is
+			trimmed from the beginning and end of each capture.
+
+			With :CaptureClipboardReverse, changes are prepended,
+			reverting the insertion order. Normally, changes are
+			appended to the current or given [line].
+			Use :$|CaptureClipboard to append to the end of the
+			current buffer. 
+
+			{delimiter} is evaluated as an expression if it is
+			(single- or double-)quoted, or contains backslashes. 
+			The default {delimiter} is "\n"; each capture is
+			placed on a new line. Use '' to place everything next
+			to each other, ' ' to put a space character in
+			between, "\n--\n" to insert a -- separator line
+			between captures. When {delimiter} contains a newline
+			character, the first capture will already start on a
+			new line. 
