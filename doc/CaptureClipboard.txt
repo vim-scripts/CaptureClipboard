@@ -1,12 +1,12 @@
-*CaptureClipboard.txt*    Append system clipboard changes to current buffer. 
-		     
+*CaptureClipboard.txt*    Append system clipboard changes to current buffer.
+
 		     CAPTURE CLIPBOARD    by Ingo Karkat
 		     (original version by Marian Csontos)
 							*CaptureClipboard.vim*
 description			|CaptureClipboard-description|
-usage	    			|CaptureClipboard-usage|
-installation   			|CaptureClipboard-installation|
-configuration  			|CaptureClipboard-configuration|
+usage				|CaptureClipboard-usage|
+installation			|CaptureClipboard-installation|
+configuration			|CaptureClipboard-configuration|
 limitations			|CaptureClipboard-limitations|
 known problems			|CaptureClipboard-known-problems|
 todo				|CaptureClipboard-todo|
@@ -33,7 +33,7 @@ USAGE						      *CaptureClipboard-usage*
 			(in new lines, or delimited by {delimiter} if given).
 			To stop, press <CTRL-C> or copy a literal dot (".") to
 			the clipboard. If [count] is given, the capture stops
-			after [count] captures. 
+			after [count] captures.
 
 			If [!] is given, whitespace (including new lines) is
 			trimmed from the beginning and end of each capture.
@@ -42,37 +42,41 @@ USAGE						      *CaptureClipboard-usage*
 			reverting the insertion order. Normally, changes are
 			appended to the current or given [line].
 			Use :$|CaptureClipboard to append to the end of the
-			current buffer. 
+			current buffer.
 
 			{delimiter} is evaluated as an expression if it is
-			(single- or double-)quoted, or contains backslashes. 
+			(single- or double-)quoted, or contains backslashes.
 			The default {delimiter} is "\n"; each capture is
 			placed on a new line. Use '' to place everything next
 			to each other, ' ' to put a space character in
 			between, "\n--\n" to insert a -- separator line
 			between captures. When {delimiter} contains a newline
 			character, the first capture will already start on a
-			new line. 
+			new line.
+
+								  *i_CTRL-R_?*
+CTRL-R ?		Wait for one capture from the clipboard and insert it
+			at the current cursor position.
 
 ==============================================================================
 INSTALLATION				       *CaptureClipboard-installation*
 
 This script is packaged as a |vimball|. If you have the "gunzip" decompressor
-in your PATH, simply edit the *.vba.gz package in Vim; otherwise, decompress
+in your PATH, simply edit the *.vmb.gz package in Vim; otherwise, decompress
 the archive first, e.g. using WinZip. Inside Vim, install by sourcing the
 vimball or via the |:UseVimball| command. >
-    vim CaptureClipboard.vba.gz
+    vim CaptureClipboard*.vmb.gz
     :so %
-To uninstall, use the |:RmVimball| command. 
+To uninstall, use the |:RmVimball| command.
 
 DEPENDENCIES				       *CaptureClipboard-dependencies*
 
-- Requires Vim 7.0 or higher. 
+- Requires Vim 7.0 or higher.
 
 ==============================================================================
 CONFIGURATION				      *CaptureClipboard-configuration*
 
-For a permanent configuration, put the following commands into your |vimrc|: 
+For a permanent configuration, put the following commands into your |vimrc|:
 
 					 *g:CaptureClipboard_DefaultDelimiter*
 By default, each capture will be placed on a new line in the capture buffer;
@@ -94,6 +98,12 @@ to only capture changes to the X clipboard (|quoteplus|), not every change in
 selection, use: >
     let g:CaptureClipboard_Register = '+'
 <
+						      *CaptureClipboard-remap*
+If you want to use a different mapping, map your keys to the
+<Plug>(CaptureClipboardInsertOne) mapping target _before_ sourcing the script
+(e.g. in your |vimrc|): >
+    imap <C-R>? <Plug>(CaptureClipboardInsertOne)
+<
 ==============================================================================
 LIMITATIONS					*CaptureClipboard-limitations*
 
@@ -106,19 +116,22 @@ IDEAS						      *CaptureClipboard-ideas*
 ==============================================================================
 HISTORY						    *CaptureClipboard-history*
 
+1.10	29-Oct-2012
+Add mapping to wait for and insert one capture.
+
 1.00	20-Sep-2010
-First published version. 
+First published version.
 
 0.01	23-Sep-2009
-First enhancements. 
+First enhancements.
 
 0.00	26-Oct-2006
 Copied original function TrackClipboard() by from vimtip #1370, now residing
 at http://vim.wikia.com/wiki/Tracking_clipboard_changes
 
 ==============================================================================
-Copyright: (C) 2010 Ingo Karkat
-The VIM LICENSE applies to this script; see |copyright|. 
+Copyright: (C) 2010-2012 Ingo Karkat
+The VIM LICENSE applies to this script; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
 ==============================================================================

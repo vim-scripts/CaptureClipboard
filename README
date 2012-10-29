@@ -12,28 +12,31 @@ more, and can completely focus on text collection via CTRL-C, CTRL-C, ...
 USAGE
 :[count]CaptureClipboard[!] [{delimiter}]
 :[count]CaptureClipboardReverse[!] [{delimiter}]
-			Monitors the clipboard for changes and inserts any
-			change of clipboard contents into the current buffer
-			(in new lines, or delimited by {delimiter} if given).
-			To stop, press <CTRL-C> or copy a literal dot (".") to
-			the clipboard. If [count] is given, the capture stops
-			after [count] captures. 
+                        Monitors the clipboard for changes and inserts any
+                        change of clipboard contents into the current buffer
+                        (in new lines, or delimited by {delimiter} if given).
+                        To stop, press <CTRL-C> or copy a literal dot (".") to
+                        the clipboard. If [count] is given, the capture stops
+                        after [count] captures.
 
-			If [!] is given, whitespace (including new lines) is
-			trimmed from the beginning and end of each capture.
+                        If [!] is given, whitespace (including new lines) is
+                        trimmed from the beginning and end of each capture.
 
-			With :CaptureClipboardReverse, changes are prepended,
-			reverting the insertion order. Normally, changes are
-			appended to the current or given [line].
-			Use :$|CaptureClipboard to append to the end of the
-			current buffer. 
+                        With :CaptureClipboardReverse, changes are prepended,
+                        reverting the insertion order. Normally, changes are
+                        appended to the current or given [line].
+                        Use :$|CaptureClipboard to append to the end of the
+                        current buffer.
 
-			{delimiter} is evaluated as an expression if it is
-			(single- or double-)quoted, or contains backslashes. 
-			The default {delimiter} is "\n"; each capture is
-			placed on a new line. Use '' to place everything next
-			to each other, ' ' to put a space character in
-			between, "\n--\n" to insert a -- separator line
-			between captures. When {delimiter} contains a newline
-			character, the first capture will already start on a
-			new line. 
+                        {delimiter} is evaluated as an expression if it is
+                        (single- or double-)quoted, or contains backslashes.
+                        The default {delimiter} is "\n"; each capture is
+                        placed on a new line. Use '' to place everything next
+                        to each other, ' ' to put a space character in
+                        between, "\n--\n" to insert a -- separator line
+                        between captures. When {delimiter} contains a newline
+                        character, the first capture will already start on a
+                        new line.
+
+CTRL-R ?                Wait for one capture from the clipboard and insert it
+                        at the current cursor position.
