@@ -116,6 +116,10 @@ IDEAS						      *CaptureClipboard-ideas*
 ==============================================================================
 HISTORY						    *CaptureClipboard-history*
 
+1.11	30-Dec-2012
+Implement check for no-modifiable buffer via noop-modification instead of
+checking for 'modifiable'; this also handles the read-only warning.
+
 1.10	29-Oct-2012
 Add mapping to wait for and insert one capture.
 

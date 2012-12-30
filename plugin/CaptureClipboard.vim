@@ -11,6 +11,12 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.11.010	28-Dec-2012	Minor: Correct lnum for no-modifiable buffer
+"				check.
+"   1.11.009	25-Nov-2012	Implement check for no-modifiable buffer via
+"				noop-modification instead of checking for
+"				'modifiable'; this also handles the read-only
+"				warning.
 "   1.10.008	29-Oct-2012	Add mapping to wait for and insert one capture.
 "   1.00.007	20-Sep-2010	Changed end-of-capture marker from "EOF" to ".";
 "				the former rarely exists in real life, so it's
@@ -94,8 +100,8 @@ endif
 
 "- commands -------------------------------------------------------------------
 
-command! -bang -count -nargs=? CaptureClipboard		call CaptureClipboard#CaptureClipboard(0, <bang>0, <count>, <f-args>)
-command! -bang -count -nargs=? CaptureClipboardReverse	call CaptureClipboard#CaptureClipboard(1, <bang>0, <count>, <f-args>)
+command! -bang -count -nargs=? CaptureClipboard		call setline('.', getline('.')) | call CaptureClipboard#CaptureClipboard(0, <bang>0, <count>, <f-args>)
+command! -bang -count -nargs=? CaptureClipboardReverse	call setline('.', getline('.')) | call CaptureClipboard#CaptureClipboard(1, <bang>0, <count>, <f-args>)
 
 
 "- mappings --------------------------------------------------------------------

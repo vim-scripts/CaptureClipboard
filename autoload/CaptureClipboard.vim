@@ -1,36 +1,43 @@
-" CaptureClipboard.vim: Append system clipboard changes to current buffer. 
+" CaptureClipboard.vim: Append system clipboard changes to current buffer.
 "
 " DEPENDENCIES:
+"   - ingocmdargs.vim autoload script
 "
-" Copyright: (C) 2010 Ingo Karkat
-"   The VIM LICENSE applies to this script; see ':help copyright'. 
+" Copyright: (C) 2010-2012 Ingo Karkat
+"   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
-" REVISION	DATE		REMARKS 
+" REVISION	DATE		REMARKS
+"   1.11.002	25-Nov-2012	Implement check for no-modifiable buffer via
+"				noop-modification instead of checking for
+"				'modifiable'; this also handles the read-only
+"				warning.
+"				Factor out s:GetDelimiter() as
+"				ingocmdargs#GetStringExpr() for re-use in other
+"				plugins.
 "   1.00.001	18-Sep-2010	file creation
-
 let s:save_cpo = &cpo
 set cpo&vim
 
 function! s:PreCapture()
-    " Disable folding; it may obscure what's being captured. 
+    " Disable folding; it may obscure what's being captured.
     let s:save_foldenable = &foldenable
     set nofoldenable
 
-    " Save original title.  
+    " Save original title.
     if &title
 	let s:save_titlestring = &titlestring
     endif
-    
+
     " Set up autocmd to restore settings in case the capturing is not stopped
-    " via the end-of-capture marker, but by aborting the command. 
+    " via the end-of-capture marker, but by aborting the command.
     augroup CaptureClipboard
 	autocmd!
 	" Note: The CursorMoved event is triggered immediately after a CTRL-C if
 	" text has been inserted; the other events are not triggered inside the
 	" loop. If no text has been captured, we try to restore the settings
-	" when the cursor moves or the window changes. 
+	" when the cursor moves or the window changes.
 	autocmd CursorHold,CursorMoved,WinLeave * call s:PostCapture() | autocmd! CaptureClipboard
     augroup END
 endfunction
@@ -49,7 +56,7 @@ endfunction
 function! s:Message( ... )
     if &title
 	let &titlestring = (a:0 ? a:1 . printf(' clip%s...', (a:1 == 1 ? '' : 's')) : 'Capturing...') . ' - %{v:servername}'
-	redraw  " This is necessary to update the title. 
+	redraw  " This is necessary to update the title.
     endif
 
     echo printf('Capturing clipboard changes %sto current buffer. To stop, press <CTRL-C> or copy "%s". ',
@@ -69,22 +76,6 @@ function! s:ClearClipboard()
     execute 'let @' . g:CaptureClipboard_Register . ' = ""'
 endfunction
 
-function! s:GetDelimiter( argument )
-    try
-	if a:argument =~# '^\([''"]\).*\1$' 
-	    " The argument is quotes, evaluate it. 
-	    execute 'let l:delimiter =' a:argument
-	elseif a:argument =~# '\\' 
-	    " The argument contains escape characters, evaluate them. 
-	    execute 'let l:delimiter = "' . a:argument . '"'
-	else
-	    let l:delimiter = a:argument
-	endif
-    catch /^Vim\%((\a\+)\)\=:E/
-	let l:delimiter = a:argument
-    endtry
-    return l:delimiter
-endfunction
 function! s:Insert( text, delimiter, isPrepend )
     let l:insertText = (a:isPrepend ? a:text . a:delimiter : a:delimiter . a:text)
     if l:insertText =~# (a:isPrepend ? '\n$' : '^\n')
@@ -95,15 +86,7 @@ function! s:Insert( text, delimiter, isPrepend )
     endif
 endfunction
 function! CaptureClipboard#CaptureClipboard( isPrepend, isTrim, count, ... )
-    if ! &l:modifiable
-	let v:errmsg = "E21: Cannot make changes, 'modifiable' is off"
-	echohl ErrorMsg
-	echomsg v:errmsg
-	echohl None
-	return
-    endif
-
-    let l:delimiter = (a:0 ? s:GetDelimiter(a:1) : g:CaptureClipboard_DefaultDelimiter)
+    let l:delimiter = (a:0 ? ingocmdargs#GetStringExpr(a:1) : g:CaptureClipboard_DefaultDelimiter)
     let l:firstDelimiter = (l:delimiter =~# '\n' ? "\n" : '')
 
     call s:PreCapture()
@@ -112,7 +95,7 @@ function! CaptureClipboard#CaptureClipboard( isPrepend, isTrim, count, ... )
 
     if s:GetClipboard() ==# g:CaptureClipboard_EndOfCaptureMarker
 	" Remove the end-of-capture marker (from a previous :CaptureClipboard run) from the
-	" clipboard, or else the capture won't even start. 
+	" clipboard, or else the capture won't even start.
 	call s:ClearClipboard()
     endif
 
@@ -141,7 +124,7 @@ function! CaptureClipboard#CaptureClipboard( isPrepend, isTrim, count, ... )
     call s:EndMessage(l:captureCount)
     autocmd! CaptureClipboard
     call s:PostCapture()
-endfunction 
+endfunction
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
