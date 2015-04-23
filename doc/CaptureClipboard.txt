@@ -26,11 +26,15 @@ more, and can completely focus on text collection via CTRL-C, CTRL-C, ...
 ==============================================================================
 USAGE						      *CaptureClipboard-usage*
 				*:CaptureClipboard* *:CaptureClipboardReverse*
-:[count]CaptureClipboard[!] [{delimiter}]
-:[count]CaptureClipboardReverse[!] [{delimiter}]
+:[count]CaptureClipboard[!] {delimiter}
+:[count]CaptureClipboard[!] {prefix}^M{suffix}
+:[count]CaptureClipboard[!] {prefix}^M{delimiter}^M{suffix}
+:[count]CaptureClipboard[!] {first-prefix}^M{prefix}^M{delimiter}^M{suffix}
+:[count]CaptureClipboardReverse[!] {...}
 			Monitors the clipboard for changes and inserts any
 			change of clipboard contents into the current buffer
-			(in new lines, or delimited by {delimiter} if given).
+			(in new lines, or, if given, delimited by {delimiter},
+			and with {prefix} before and {suffix} after).
 			To stop, press <CTRL-C> or copy a literal dot (".") to
 			the clipboard. If [count] is given, the capture stops
 			after [count] captures.
@@ -45,7 +49,7 @@ USAGE						      *CaptureClipboard-usage*
 			current buffer.
 
 			{delimiter} is evaluated as an expression if it is
-			(single- or double-)quoted, or contains backslashes.
+			(single- or double-) quoted, or contains backslashes.
 			The default {delimiter} is "\n"; each capture is
 			placed on a new line. Use '' to place everything next
 			to each other, ' ' to put a space character in
@@ -53,6 +57,8 @@ USAGE						      *CaptureClipboard-usage*
 			between captures. When {delimiter} contains a newline
 			character, the first capture will already start on a
 			new line.
+			Backslash-escaped characters (like \n) are also
+			supported in {prefix} and {suffix}.
 
 								  *i_CTRL-R_?*
 CTRL-R ?		Wait for one capture from the clipboard and insert it
@@ -72,6 +78,8 @@ To uninstall, use the |:RmVimball| command.
 DEPENDENCIES				       *CaptureClipboard-dependencies*
 
 - Requires Vim 7.0 or higher.
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.024 or
+  higher.
 
 ==============================================================================
 CONFIGURATION				      *CaptureClipboard-configuration*
@@ -116,6 +124,14 @@ IDEAS						      *CaptureClipboard-ideas*
 ==============================================================================
 HISTORY						    *CaptureClipboard-history*
 
+1.20	23-Apr-2015
+- Use ingo#lines#PutWrapper() to avoid clobbering the expression register.
+- ENH: Support {prefix}^M{suffix} and
+  {first-prefix}^M{prefix}^M{delimiter}^M{suffix} alternatives to the
+  simplistic {delimiter}.
+  *** You need to separately install ingo-library (vimscript #4433) version
+  1.024 (or higher)! ***
+
 1.11	30-Dec-2012
 Implement check for no-modifiable buffer via noop-modification instead of
 checking for 'modifiable'; this also handles the read-only warning.
@@ -134,8 +150,8 @@ Copied original function TrackClipboard() by from vimtip #1370, now residing
 at http://vim.wikia.com/wiki/Tracking_clipboard_changes
 
 ==============================================================================
-Copyright: (C) 2010-2012 Ingo Karkat
-The VIM LICENSE applies to this script; see |copyright|.
+Copyright: (C) 2010-2015 Ingo Karkat
+The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
 ==============================================================================

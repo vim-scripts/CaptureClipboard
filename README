@@ -10,11 +10,15 @@ title, so one does not have to switch back and forth between applications any
 more, and can completely focus on text collection via CTRL-C, CTRL-C, ...
 
 USAGE
-:[count]CaptureClipboard[!] [{delimiter}]
-:[count]CaptureClipboardReverse[!] [{delimiter}]
+:[count]CaptureClipboard[!] {delimiter}
+:[count]CaptureClipboard[!] {prefix}^M{suffix}
+:[count]CaptureClipboard[!] {prefix}^M{delimiter}^M{suffix}
+:[count]CaptureClipboard[!] {first-prefix}^M{prefix}^M{delimiter}^M{suffix}
+:[count]CaptureClipboardReverse[!] {...}
                         Monitors the clipboard for changes and inserts any
                         change of clipboard contents into the current buffer
-                        (in new lines, or delimited by {delimiter} if given).
+                        (in new lines, or, if given, delimited by {delimiter},
+                        and with {prefix} before and {suffix} after).
                         To stop, press <CTRL-C> or copy a literal dot (".") to
                         the clipboard. If [count] is given, the capture stops
                         after [count] captures.
@@ -29,7 +33,7 @@ USAGE
                         current buffer.
 
                         {delimiter} is evaluated as an expression if it is
-                        (single- or double-)quoted, or contains backslashes.
+                        (single- or double-) quoted, or contains backslashes.
                         The default {delimiter} is "\n"; each capture is
                         placed on a new line. Use '' to place everything next
                         to each other, ' ' to put a space character in
@@ -37,6 +41,8 @@ USAGE
                         between captures. When {delimiter} contains a newline
                         character, the first capture will already start on a
                         new line.
+                        Backslash-escaped characters (like \n) are also
+                        supported in {prefix} and {suffix}.
 
 CTRL-R ?                Wait for one capture from the clipboard and insert it
                         at the current cursor position.

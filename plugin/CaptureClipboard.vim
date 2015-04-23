@@ -2,15 +2,17 @@
 
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
-"   - CaptureClipboard.vim autoload script.
+"   - CaptureClipboard.vim autoload script
+"   - ingo/err.vim autoload script
 
-" Copyright: (C) 2010-2012 Ingo Karkat
+" Copyright: (C) 2010-2015 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Original Autor: Marian Csontos
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.20.011	21-Apr-2015	Add error handling via ingo/err.vim.
 "   1.11.010	28-Dec-2012	Minor: Correct lnum for no-modifiable buffer
 "				check.
 "   1.11.009	25-Nov-2012	Implement check for no-modifiable buffer via
@@ -100,8 +102,8 @@ endif
 
 "- commands -------------------------------------------------------------------
 
-command! -bang -count -nargs=? CaptureClipboard		call setline('.', getline('.')) | call CaptureClipboard#CaptureClipboard(0, <bang>0, <count>, <f-args>)
-command! -bang -count -nargs=? CaptureClipboardReverse	call setline('.', getline('.')) | call CaptureClipboard#CaptureClipboard(1, <bang>0, <count>, <f-args>)
+command! -bang -count -nargs=? CaptureClipboard		call setline('.', getline('.')) | if ! CaptureClipboard#CaptureClipboard(0, <bang>0, <count>, <f-args>) | echoerr ingo#err#Get() | endif
+command! -bang -count -nargs=? CaptureClipboardReverse	call setline('.', getline('.')) | if ! CaptureClipboard#CaptureClipboard(1, <bang>0, <count>, <f-args>) | echoerr ingo#err#Get() | endif
 
 
 "- mappings --------------------------------------------------------------------
